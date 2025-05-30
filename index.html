@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Floating Text Sky</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      height: 100vh;
+      background: linear-gradient(to bottom, #000010, #000022, #000033, #000011);
+      background-size: 100% 200%;
+      font-family: sans-serif;
+    }
+
+    .floating-text {
+      position: absolute;
+      color: #fff;
+      font-weight: bold;
+      opacity: 0.9;
+      pointer-events: none;
+      text-shadow: 0 0 10px #00f, 0 0 20px #fff;
+      animation: fall 10s linear forwards;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-10vh);
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(110vh);
+        opacity: 0;
+      }
+    }
+
+    canvas.stars {
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      background: transparent;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas class="stars"></canvas>
+
+  <script>
+    const texts = [
+      "Chào bạn!", "Xin chào", "Welcome", "Hello World", 
+      "Hãy nhắn tin nhé!", "❤️", "50G", "22:32", "Camera", "Message", "Inbox"
+    ];
+
+    function createFloatingText(text) {
+      const el = document.createElement('div');
+      el.className = 'floating-text';
+      el.innerText = text;
+
+      // Vị trí và kích thước ngẫu nhiên
+      el.style.left = Math.random() * 80 + 'vw'; // chỉ đến 80vw để không tràn
+      el.style.fontSize = (1 + Math.random() * 1.5) + 'rem'; // giảm kích thước chữ
+      el.style.animationDuration = (6 + Math.random() * 6) + 's';
+
+      document.body.appendChild(el);
+      el.addEventListener('animationend', () => el.remove());
+    }
+
+    // Tạo nhiều chữ với tần suất dày hơn
+    setInterval(() => {
+      const text = texts[Math.floor(Math.random() * texts.length)];
+      createFloatingText(text);
+    }, 150);
+
+    // Vẽ nền sao
+    const canvas = document.querySelector('.stars');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    const stars = Array.from({ length: 150 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.2 + 0.5,
+      d: Math.random() * 0.5 + 0.2,
+    }));
+
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach((star, i) => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+        ctx.shadowColor = "#fff";
+        ctx.shadowBlur = 8 + Math.random() * 10; // hiệu ứng mờ cho sao
+        ctx.globalAlpha = Math.sin(Date.now() * 0.001 + i) * 0.5 + 0.5;
+        ctx.fillStyle = "#fff";
+        ctx.fill();
+        ctx.restore();
+      });
+      ctx.globalAlpha = 1.0;
+      requestAnimationFrame(drawStars);
+    }
+
+    drawStars();
+  </script>
+</body>
+</html>
