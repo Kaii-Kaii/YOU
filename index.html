@@ -110,10 +110,10 @@
       el.style.left = (Math.random() * 80) + 'vw';
 
       // Kích thước font ngẫu nhiên từ 1rem đến 2.5rem
-      el.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
+      el.style.fontSize = (1.2 + Math.random() * 1.5) + 'rem';
 
       // Thời gian rơi ngẫu nhiên 6 - 12 giây
-      const duration = 6 + Math.random() * 6;
+      const duration = 5 + Math.random() * 5;
       el.style.animationDuration = `${duration}s`;
 
       // Đặt transform ban đầu trùng với animation keyframes (để mượt)
@@ -129,7 +129,7 @@
     setInterval(() => {
       const text = texts[Math.floor(Math.random() * texts.length)];
       createFloatingText(text);
-    }, 150);
+    }, 250);
 
     // Vẽ nền sao
     const canvas = document.querySelector('.stars');
@@ -143,7 +143,7 @@
     resizeCanvas();
 
     // Tạo mảng sao với thông số ngẫu nhiên
-    const stars = Array.from({ length: 300 }, (_, i) => ({
+    const stars = Array.from({ length: 200 }, (_, i) => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
       r: Math.random() * 1.5 + 0.5,
