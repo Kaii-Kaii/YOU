@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Floating Text Sky</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Iuuu Iuuu 💕</title>
   <style>
     * {
       box-sizing: border-box;
     }
-
     body {
       margin: 0;
       overflow: hidden;
       height: 100vh;
       background: linear-gradient(to bottom, #000010, #000022, #000033, #000011);
-      background-size: 100% 200%;
       font-family: sans-serif;
+      perspective: 600px; /* tạo hiệu ứng 3D */
+      position: relative;
     }
 
     .floating-text {
@@ -25,18 +25,21 @@
       opacity: 0.9;
       pointer-events: none;
       text-shadow: 0 0 10px #00f, 0 0 20px #fff;
-      animation: fall 10s linear forwards;
       white-space: nowrap;
       user-select: none;
+      transform-style: preserve-3d;
+      animation: fall linear forwards;
+      will-change: transform, opacity;
     }
 
+    /* Animation chữ rơi từ trên xuống dưới với nghiêng nhẹ */
     @keyframes fall {
       0% {
-        transform: translateY(-10vh);
+        transform: translateY(-10vh) rotateY(15deg) skewX(5deg);
         opacity: 0.9;
       }
       100% {
-        transform: translateY(110vh);
+        transform: translateY(110vh) rotateY(15deg) skewX(5deg);
         opacity: 0;
       }
     }
@@ -58,8 +61,44 @@
 
   <script>
     const texts = [
-      "Chào bạn!", "Xin chào", "Welcome", "Hello World", 
-      "Hãy nhắn tin nhé!", "❤️", "50G", "22:32", "Camera", "Message", "Inbox"
+      "Anh yêu em",
+      "Anh yêu em",
+      "Anh yêu em",
+      "Anh yêu em",
+      "Anh yêu em",
+      "I love you",
+      "Je t'aime",
+      "Te amo",
+      "Ich liebe dich",
+      "Ti amo",
+      "Eu te amo",
+      "Я тебя люблю",
+      "愛してる",
+      "사랑해",
+      "我爱你",
+      "Main tumse pyaar karta hoon",
+      "Saya cinta kamu",
+      "Ngiyakuthanda",
+      "Naan unnai kathalikiren",
+      "Nenu ninnu premistunnanu",
+      "Amo-te",
+      "Tá grá agam duit",
+      "Jeg elsker deg",
+      "Jeg elsker dig",
+      "Aš tave myliu",
+      "Kocham cię",
+      "Miluji tě",
+      "Volim te",
+      "Te iubesc",
+      "Seni seviyorum",
+      "Σ' αγαπώ",
+      "Ég elska þig",
+      "Nakupenda",
+      "Te sakam",
+      "Ti voglio bene",
+      "Ik hou van jou",
+      "Lubię cię",
+      "❤️", "❤️", "❤️", "❤️", "❤️", "❤️", "❤️", "❤️", "❤️", "❤️",
     ];
 
     function createFloatingText(text) {
@@ -67,16 +106,26 @@
       el.className = 'floating-text';
       el.innerText = text;
 
-      // Vị trí và kích thước ngẫu nhiên
-      el.style.left = Math.random() * 80 + 'vw'; // chỉ đến 80vw để không tràn
-      el.style.fontSize = (1 + Math.random() * 1.5) + 'rem'; // giảm kích thước chữ
-      el.style.animationDuration = (6 + Math.random() * 6) + 's';
+      // Vị trí ngang ngẫu nhiên trong khoảng 0-80vw để chữ không sát mép
+      el.style.left = (Math.random() * 80) + 'vw';
+
+      // Kích thước font ngẫu nhiên từ 1rem đến 2.5rem
+      el.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
+
+      // Thời gian rơi ngẫu nhiên 6 - 12 giây
+      const duration = 6 + Math.random() * 6;
+      el.style.animationDuration = `${duration}s`;
+
+      // Đặt transform ban đầu trùng với animation keyframes (để mượt)
+      el.style.transform = 'rotateY(15deg) skewX(5deg)';
 
       document.body.appendChild(el);
+
+      // Xoá element khi animation rơi kết thúc
       el.addEventListener('animationend', () => el.remove());
     }
 
-    // Tạo nhiều chữ với tần suất dày hơn
+    // Tạo chữ rơi liên tục, mỗi 150ms tạo một chữ mới
     setInterval(() => {
       const text = texts[Math.floor(Math.random() * texts.length)];
       createFloatingText(text);
@@ -93,23 +142,25 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    const stars = Array.from({ length: 150 }, () => ({
+    // Tạo mảng sao với thông số ngẫu nhiên
+    const stars = Array.from({ length: 300 }, (_, i) => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      r: Math.random() * 1.2 + 0.5,
-      d: Math.random() * 0.5 + 0.2,
+      r: Math.random() * 1.5 + 0.5,
+      color: `hsl(${Math.random() * 60 + 200}, 100%, 85%)`,
+      id: i
     }));
 
     function drawStars() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      stars.forEach((star, i) => {
+      stars.forEach(star => {
         ctx.save();
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
-        ctx.shadowColor = "#fff";
-        ctx.shadowBlur = 8 + Math.random() * 10; // hiệu ứng mờ cho sao
-        ctx.globalAlpha = Math.sin(Date.now() * 0.001 + i) * 0.5 + 0.5;
-        ctx.fillStyle = "#fff";
+        ctx.shadowColor = star.color;
+        ctx.shadowBlur = 15 + Math.random() * 15;
+        ctx.globalAlpha = Math.abs(Math.sin(Date.now() * 0.002 + star.id * 3)) * 0.8 + 0.2;
+        ctx.fillStyle = star.color;
         ctx.fill();
         ctx.restore();
       });
